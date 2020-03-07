@@ -1,0 +1,10 @@
+---
+# tasks file for mysql
+ - name: Cria o banco de dados para o Moodle
+   mysql_db: name=dbmoodle state=present
+   
+ - name: Cria um usuario de banco para o Moodle
+   mysql_user:
+   name= moodledb
+   password= moodledbs
+   priv=*.*:ALL
