@@ -13,16 +13,25 @@
     validate_certs=no
  - copy:
     src: /moodle/moodle-3.8.2.tgz
-    dest: /tmp
+    dest: /var/www
  - shell: gzip /tmp/moodle-3.8.2.tgz
 # - name: Descompacta o Moodle
 #   unarchive: 
     
    
- - name: Modifica permissao pasta wordpress
+ - name: Modifica permissao pasta Moodle
    file:
     path: /moodle
     owner: bguima
-    group: tp3
-    mode: "0755"
-    recurse: yes
+
+ - name: Atualiza o site Apache padrao
+   lineinfile:
+    dest=/etc/apache2/sites-enabled/000-default.conf
+    regexp="(.)+DocumentRoot /var/www/html"
+    line="DocumentRoot /var/www/moodle"
+
+   notify:
+    - reinicia apache
+
+ - name: Configura o Cron
+   cron: name="Moodle" job="/usr/bin/php moodle/admin/cli/cron.php >/dev/null" 
