@@ -1,8 +1,8 @@
-- hosts: moodle
+- hosts: localhost
   remote_user: bguima
   become: yes
   roles:
   - server
-  - php
-  - mysql
   - moodle
+  - mysql
+  - php

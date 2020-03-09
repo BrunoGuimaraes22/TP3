@@ -1,20 +1,28 @@
 ---
 # tasks file for moodle
  - name: Cria o usuário
-   user: name="{{ moodle_user }}"
+   user: name=moobleb
 
  - name: Cria o diretório do Moodle
-   file: dest="{{ moodle_path }}" state=directory owner="{{ moodle_user }}"
+   file: dest=/moodle state=directory owner=bguima
 
-
- - name: Baixa e instala o Moodle
-   git: repo=https://github.com/moodle/moodle.git version="{{ moodle_version }}" dest="{{ moodle_src }}" accept_hostkey=yes
-
- - name: Configura o Moodle
-   template: src=config.php.j2 dest="{{ moodle_src }}/config.php"
-
- - name: Create o diretório de documentos do Moodle
-   file: dest="{{ moodle_docs }}" state=directory owner="{{ moodle_user }}"
-
- - name: Configura o aqruivo cron
-   cron: name="Moodle" job="/usr/bin/php {{ moodle_path }}/admin/cli/cron.php >/dev/null"
+ - name: Baixa o Moodle
+   get_url: 
+    url=https://download.moodle.org/download.php/stable38/moodle-3.8.2.tgz
+    dest=/moodle
+    validate_certs=no
+ - copy:
+    src: /moodle/moodle-3.8.2.tgz
+    dest: /tmp
+ - shell: gzip /tmp/moodle-3.8.2.tgz
+# - name: Descompacta o Moodle
+#   unarchive: 
+    
+   
+ - name: Modifica permissao pasta wordpress
+   file:
+    path: /moodle
+    owner: bguima
+    group: tp3
+    mode: "0755"
+    recurse: yes
